@@ -1,0 +1,64 @@
+﻿@model ScheduleApp.Models.Employee
+
+@{
+   ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+   <h4>Employee</h4>
+   <hr />
+   <dl class="row">
+      <dt class="col-sm-2">
+         @Html.DisplayNameFor(model => model.First)
+      </dt>
+      <dd class="col-sm-10">
+         @Html.DisplayFor(model => model.First)
+      </dd>
+      <dt class="col-sm-2">
+         @Html.DisplayNameFor(model => model.Last)
+      </dt>
+      <dd class="col-sm-10">
+         @Html.DisplayFor(model => model.Last)
+      </dd>
+   </dl>
+</div>
+<div>
+   <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
+   <a asp-action="Index">Back to List</a>
+</div>
+<hr />
+<div>
+   @if (Model.Shifts != null && Model.Shifts.Count > 0)
+   {
+      <h3>Shifts scheduled for @Html.DisplayFor(model => model.Name)</h3>
+      <table class="table">
+         <tr>
+            <th>@Html.DisplayNameFor(model => model.Shifts.ToList()[0].Start)</th>
+            <th>@Html.DisplayNameFor(model => model.Shifts.ToList()[0].End)</th>
+            <th>@Html.DisplayNameFor(model => model.Shifts.ToList()[0].Schedule)</th>
+         </tr>
+
+         @foreach (var item in Model.Shifts)
+         {
+            <tr>
+               <td>
+                  @item.Start
+               </td>
+               <td>
+                  @item.End
+               </td>
+               <td>
+                  @item.Schedule.Name
+               </td>
+            </tr>
+         }
+
+      </table>
+   }
+   else
+   {
+      <p>No shifts scheduled for @Html.DisplayFor(model => model.Name)</p>
+   }
+</div>

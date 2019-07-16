@@ -1,0 +1,242 @@
+﻿@model ScheduleApp.Models.MultipleShiftsViewModel
+
+@{
+   ViewData["Title"] = "Create Multiple";
+}
+
+<h1>Create Multiple</h1>
+
+<h4>Shift</h4>
+<hr />
+@*<div class="row">
+      <div class="col-md-4">
+         <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+               <label asp-for="Start" class="control-label"></label>
+               <input asp-for="Start" class="form-control" />
+               <span asp-validation-for="Start" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+               <label asp-for="End" class="control-label"></label>
+               <input asp-for="End" class="form-control" />
+               <span asp-validation-for="End" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+               <label asp-for="Employee" class="control-label"></label>
+               <select asp-for="EmployeeId" class="form-control" asp-items="ViewBag.EmployeeId">
+                  <option value="">Select One</option>
+               </select>
+               <span asp-validation-for="EmployeeId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+               <label asp-for="Schedule" class="control-label"></label>
+               <select asp-for="ScheduleId" class="form-control" asp-items="ViewBag.ScheduleId">
+                  <option value="">Select One</option>
+               </select>
+               <span asp-validation-for="ScheduleId" class="text-danger"></span>
+
+            </div>
+            <div class="form-group">
+               <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+         </form>
+      </div>
+   </div>*@
+
+<form asp-action="CreateMultiple">
+   <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+   <div class="form-row align-items-center mb-3">
+
+      @*Employee*@
+      <div class="col-auto">
+         <label asp-for="Employee" class="control-label"></label>
+         <select asp-for="EmployeeId" class="form-control" asp-items="ViewBag.EmployeeId">
+            <option value="">Select One</option>
+         </select>
+         <span asp-validation-for="EmployeeId" class="text-danger"></span>
+      </div>
+
+      @*Schedule*@
+      <div class="col-auto">
+
+         <label asp-for="Schedule" class="control-label"></label>
+         <select asp-for="ScheduleId" class="form-control" asp-items="ViewBag.ScheduleId">
+            <option value="">Select One</option>
+         </select>
+         <span asp-validation-for="ScheduleId" class="text-danger"></span>
+      </div>
+
+   </div>
+
+   @*Start and end date range*@
+   <div class="form-row align-items-center mb-3">
+      <div class="col-auto">
+         <label asp-for="StartDate" class="control-label"></label>
+         <input asp-for="StartDate" class="form-control" />
+      </div>
+      <div class="col-auto">
+         <label asp-for="EndDate" class="control-label"></label>
+         <input asp-for="EndDate" class="form-control" />
+      </div>
+   </div>
+   <span asp-validation-for="StartDate" class="text-danger"></span>
+   <span asp-validation-for="EndDate" class="text-danger"></span>
+
+   @*Sunday time info*@
+   <div class="form-row align-items-center">
+      <div class="col-2 py-3">
+         <div class="form-check">
+            <input asp-for="WorksSunday" class="form-check-input" />
+            <label asp-for="WorksSunday" class="form-check-label"></label>
+         </div>
+      </div>
+      <div class="col-auto form-inline" id="SundayTime">
+         <input asp-for="SundayStartTime" class="form-control" />
+         &nbsp;to&nbsp;
+         <input asp-for="SundayEndTime" class="form-control" />
+      </div>
+   </div>
+   <span asp-validation-for="SundayStartTime" class="text-danger"></span>
+   <span asp-validation-for="SundayEndTime" class="text-danger"></span>
+
+   @*Monday time info*@
+   <div class="form-row align-items-center">
+      <div class="col-2 py-3">
+         <div class="form-check">
+            <input asp-for="WorksMonday" class="form-check-input" />
+            <label asp-for="WorksMonday" class="form-check-label"></label>
+         </div>
+      </div>
+      <div class="col-auto form-inline" id="MondayTime">
+         <input asp-for="MondayStartTime" class="form-control" />
+         &nbsp;to&nbsp;
+         <input asp-for="MondayEndTime" class="form-control" />
+      </div>
+   </div>
+   <span asp-validation-for="MondayStartTime" class="text-danger"></span>
+   <span asp-validation-for="MondayEndTime" class="text-danger"></span>
+
+   @*Tuesday time info*@
+   <div class="form-row align-items-center">
+      <div class="col-2 py-3">
+         <div class="form-check">
+            <input asp-for="WorksTuesday" class="form-check-input" />
+            <label asp-for="WorksTuesday" class="form-check-label"></label>
+         </div>
+      </div>
+      <div class="col-auto form-inline" id="TuesdayTime">
+         <input asp-for="TuesdayStartTime" class="form-control" />
+         &nbsp;to&nbsp;
+         <input asp-for="TuesdayEndTime" class="form-control" />
+      </div>
+   </div>
+   <span asp-validation-for="TuesdayStartTime" class="text-danger"></span>
+   <span asp-validation-for="TuesdayEndTime" class="text-danger"></span>
+
+   @*Wednesday time info*@
+   <div class="form-row align-items-center">
+      <div class="col-2 py-3">
+         <div class="form-check">
+            <input asp-for="WorksWednesday" class="form-check-input" />
+            <label asp-for="WorksWednesday" class="form-check-label"></label>
+         </div>
+      </div>
+      <div class="col-auto form-inline" id="WednesdayTime">
+         <input asp-for="WednesdayStartTime" class="form-control" />
+         &nbsp;to&nbsp;
+         <input asp-for="WednesdayEndTime" class="form-control" />
+      </div>
+   </div>
+   <span asp-validation-for="WednesdayStartTime" class="text-danger"></span>
+   <span asp-validation-for="WednesdayEndTime" class="text-danger"></span>
+
+   @*Thursday time info*@
+   <div class="form-row align-items-center">
+      <div class="col-2 py-3">
+         <div class="form-check">
+            <input asp-for="WorksThursday" class="form-check-input" />
+            <label asp-for="WorksThursday" class="form-check-label"></label>
+         </div>
+      </div>
+      <div class="col-auto form-inline" id="ThursdayTime">
+         <input asp-for="ThursdayStartTime" class="form-control" />
+         &nbsp;to&nbsp;
+         <input asp-for="ThursdayEndTime" class="form-control" />
+      </div>
+   </div>
+   <span asp-validation-for="ThursdayStartTime" class="text-danger"></span>
+   <span asp-validation-for="ThursdayEndTime" class="text-danger"></span>
+
+   @*Friday time info*@
+   <div class="form-row align-items-center">
+      <div class="col-2 py-3">
+         <div class="form-check">
+            <input asp-for="WorksFriday" class="form-check-input" />
+            <label asp-for="WorksFriday" class="form-check-label"></label>
+         </div>
+      </div>
+      <div class="col-auto form-inline" id="FridayTime">
+         <input asp-for="FridayStartTime" class="form-control" />
+         &nbsp;to&nbsp;
+         <input asp-for="FridayEndTime" class="form-control" />
+      </div>
+   </div>
+   <span asp-validation-for="FridayStartTime" class="text-danger"></span>
+   <span asp-validation-for="FridayEndTime" class="text-danger"></span>
+
+   @*Saturday time info*@
+   <div class="form-row align-items-center">
+      <div class="col-2 py-3">
+         <div class="form-check">
+            <input asp-for="WorksSaturday" class="form-check-input" />
+            <label asp-for="WorksSaturday" class="form-check-label"></label>
+         </div>
+      </div>
+      <div class="col-auto form-inline" id="SaturdayTime">
+         <input asp-for="SaturdayStartTime" class="form-control" />
+         &nbsp;to&nbsp;
+         <input asp-for="SaturdayEndTime" class="form-control" />
+      </div>
+   </div>
+   <span asp-validation-for="SaturdayStartTime" class="text-danger"></span>
+   <span asp-validation-for="SaturdayEndTime" class="text-danger"></span>
+
+   <div class="col-auto">
+      <button type="submit" class="btn btn-primary mb-2">Submit</button>
+   </div>
+</form>
+
+<div>
+   <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+   @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+   <script>
+      $(document).ready(function () {
+         CheckboxToggling('#WorksSunday', '#SundayTime');
+         CheckboxToggling('#WorksMonday', '#MondayTime');
+         CheckboxToggling('#WorksTuesday', '#TuesdayTime');
+         CheckboxToggling('#WorksWednesday', '#WednesdayTime');
+         CheckboxToggling('#WorksThursday', '#ThursdayTime');
+         CheckboxToggling('#WorksFriday', '#FridayTime');
+         CheckboxToggling('#WorksSaturday', '#SaturdayTime');
+
+         $('#EndDate').removeAttr('value');
+      });
+
+      function CheckboxToggling(checkbox, div) {
+         $(checkbox).click(function () {
+            if ($(this).is(':checked')) {
+               $(div).show();
+            } else {
+               $(div).hide();
+            }
+         });
+      }
+   </script>
+
+}

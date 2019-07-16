@@ -1,0 +1,157 @@
+﻿@model ScheduleApp.Models.WeeklyScheduleViewModel
+
+@{
+   ViewData["Title"] = "Details";
+}
+
+
+<div>
+   <h1>@Html.DisplayFor(model => model.Schedule.Name)</h1>
+   <div class="form-inline mt-n1">
+      <h4 class="font-weight-light">Schedule</h4>
+      <div class="pl-3">
+         <a asp-action="Edit" asp-route-id="@Model.ScheduleId">Edit</a> |
+         <a asp-action="Index">Back to List</a>
+      </div>
+   </div>
+   <hr />
+</div>
+<div>
+   @if (Model.EmpWkShifts != null && Model.EmpWkShifts.Count > 0)
+   {
+   <form asp-controller="Schedule" asp-action="Details" method="get" class="form-inline">
+      <p>
+         Work Week:
+         <select asp-for="SelectedWeekStartDay" asp-items="Model.Weeks" class="custom-select" onchange="$(this).closest('form').submit()"></select>
+         @*<input type="submit" value="Choose" class="btn btn-primary" />*@
+      </p>
+   </form>
+
+   <table class="table table-bordered table-responsive schedule">
+      <thead>
+         <tr>
+            <th class="schedule-name">Employee</th>
+            <th class="schedule-day">@Model.SelectedWeekStartDay.ToString("ddd d")</th>
+            <th class="schedule-day">@Model.SelectedWeekStartDay.AddDays(1).ToString("ddd d")</th>
+            <th class="schedule-day">@Model.SelectedWeekStartDay.AddDays(2).ToString("ddd d")</th>
+            <th class="schedule-day">@Model.SelectedWeekStartDay.AddDays(3).ToString("ddd d")</th>
+            <th class="schedule-day">@Model.SelectedWeekStartDay.AddDays(4).ToString("ddd d")</th>
+            <th class="schedule-day">@Model.SelectedWeekStartDay.AddDays(5).ToString("ddd d")</th>
+            <th class="schedule-day">@Model.SelectedWeekStartDay.AddDays(6).ToString("ddd d")</th>
+         </tr>
+      </thead>
+      <tbody>
+         @foreach (var employee in Model.EmpWkShifts.OrderBy(x => x.Key.First))
+         {
+         <tr>
+            <td>
+               <a asp-controller="Employee" asp-action="Details" asp-route-id="@employee.Key.Id" class="text-dark">
+                  @employee.Key.Name
+               </a>
+            </td>
+            @foreach (var date in Model.EmpWkShifts.First().Value.Keys)
+            {
+            <td>
+               <ul class="list-unstyled">
+                  @foreach (var shift in Model.EmpWkShifts[employee.Key][date])
+                  {
+                  <li>
+                     <h6 class="font-weight-light">
+                        @String.Format("{0:t} - {1:t}", shift.Start, shift.End)
+                     </h6>
+                  </li>
+                  }
+               </ul>
+            </td>
+            }
+         </tr>
+         }
+      </tbody>
+   </table>
+   }
+   else
+   {
+   <p>No shifts scheduled</p>
+   }
+
+</div>
+
+@*<div>
+   <!-- Button trigger modal -->
+   <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+      Launch demo modal
+   </button>
+
+   <!-- Modal -->
+   <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+         <div class="modal-content">
+            <div class="modal-header">
+               <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+               </button>
+            </div>
+            <div class="modal-body">
+               ...
+            </div>
+            <div class="modal-footer">
+               <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+               <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+         </div>
+      </div>
+   </div>
+   <!-- Add an element that will be targeted by your Datepicker -->
+   @*<input class='datepicker' />
+</div>
+
+<div class="container">
+   <div class='col-md-5'>
+      <div class="form-group">
+         <div class="input-group date" id="datetimepicker7" data-target-input="nearest">
+            <input type="text" class="form-control datetimepicker-input" data-target="#datetimepicker7" />
+            <div class="input-group-append" data-target="#datetimepicker7" data-toggle="datetimepicker">
+               <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+            </div>
+         </div>
+      </div>
+   </div>
+   <div class='col-md-5'>
+      <div class="form-group">
+         <div class="input-group date" id="datetimepicker8" data-target-input="nearest">
+            <input type="text" class="form-control datetimepicker-input" data-target="#datetimepicker8" />
+            <div class="input-group-append" data-target="#datetimepicker8" data-toggle="datetimepicker">
+               <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+<script type="text/javascript">
+   $.fn.datetimepicker.Constructor.Default = $.extend({}, $.fn.datetimepicker.Constructor.Default, {
+      icons: {
+         time: 'far fa-clock',
+         date: 'far fa-calendar',
+         up: 'far fa-arrow-up',
+         down: 'far fa-arrow-down',
+         previous: 'far fa-chevron-left',
+         next: 'far fa-chevron-right',
+         today: 'far fa-calendar-check-o',
+         clear: 'far fa-trash',
+         close: 'far fa-times'
+      }
+   });
+   $(function () {
+      $('#datetimepicker7').datetimepicker();
+      $('#datetimepicker8').datetimepicker({
+         useCurrent: false
+      });
+      $("#datetimepicker7").on("change.datetimepicker", function (e) {
+         $('#datetimepicker8').datetimepicker('minDate', e.date);
+      });
+      $("#datetimepicker8").on("change.datetimepicker", function (e) {
+         $('#datetimepicker7').datetimepicker('maxDate', e.date);
+      });
+   });
+</script>*@
