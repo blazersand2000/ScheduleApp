@@ -12,7 +12,7 @@ function UpdateRolesOnScheduleChange(url) {
          $(".shiftRoleList").html("<option>Loading...</option>")
 
          $.getJSON(url, { ScheduleId: scheduleId }, function (data) {
-            var items = "<option value="">None</option>"
+            var items = "<option value=\"\">None</option>";
             $.each(data, function (i, shiftRole) {
                items += "<option value=\"" + shiftRole.value + "\">" + shiftRole.text + "</option>"
             });
