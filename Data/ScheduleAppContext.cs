@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using ScheduleApp.Models;
 
 namespace ScheduleApp.Models
 {
@@ -10,10 +9,12 @@ namespace ScheduleApp.Models
         {
         }
 
-        public DbSet<ScheduleApp.Models.Employee> Employee { get; set; }
+        public DbSet<Employee> Employee { get; set; }
 
-        public DbSet<ScheduleApp.Models.Schedule> Schedule { get; set; }
+        public DbSet<Schedule> Schedule { get; set; }
 
-        public DbSet<ScheduleApp.Models.Shift> Shift { get; set; }
+        public DbSet<Shift> Shift { get; set; }
+
+        public DbSet<ShiftRole> ShiftRole { get; set; }
     }
 }

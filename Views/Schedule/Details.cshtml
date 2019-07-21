@@ -59,6 +59,10 @@
                      <h6 class="font-weight-light">
                         @String.Format("{0:t} - {1:t}", shift.Start, shift.End)
                      </h6>
+                     @if (shift.ShiftRoleId != null)
+                     {
+                        <span class="badge badge-secondary">@shift.ShiftRole.Name</span>
+                     }
                   </li>
                   }
                </ul>

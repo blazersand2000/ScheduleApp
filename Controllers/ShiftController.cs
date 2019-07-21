@@ -21,7 +21,7 @@ namespace ScheduleApp.Controllers
       // GET: Shift
       public async Task<IActionResult> Index()
       {
-         var ScheduleAppContext = _context.Shift.Include(s => s.Employee).Include(s => s.Schedule);
+         var ScheduleAppContext = _context.Shift.Include(s => s.Employee).Include(s => s.Schedule).Include(s => s.ShiftRole);
          return View(await ScheduleAppContext.ToListAsync());
       }
 
@@ -36,6 +36,7 @@ namespace ScheduleApp.Controllers
          var shift = await _context.Shift
              .Include(s => s.Employee)
              .Include(s => s.Schedule)
+             .Include(s => s.ShiftRole)
              .FirstOrDefaultAsync(m => m.Id == id);
          if (shift == null)
          {
@@ -58,7 +59,7 @@ namespace ScheduleApp.Controllers
       // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
       [HttpPost]
       [ValidateAntiForgeryToken]
-      public async Task<IActionResult> Create([Bind("Id,Start,End,EmployeeId,ScheduleId")] Shift shift)
+      public async Task<IActionResult> Create([Bind("Id,Start,End,EmployeeId,ScheduleId,ShiftRoleId")] Shift shift)
       {
          if (ModelState.IsValid)
          {
@@ -68,6 +69,7 @@ namespace ScheduleApp.Controllers
          }
          ViewData["EmployeeId"] = new SelectList(_context.Employee, "Id", "Name", shift.EmployeeId);
          ViewData["ScheduleId"] = new SelectList(_context.Schedule, "Id", "Name", shift.ScheduleId);
+         ViewData["ShiftRoleId"] = new SelectList(_context.ShiftRole.Where(r => r.ScheduleId == shift.ScheduleId), "Id", "Name", shift.ShiftRoleId);
          return View(shift);
       }
 
@@ -89,7 +91,7 @@ namespace ScheduleApp.Controllers
          });
       }
 
-      // POST: Shift/Create
+      // POST: Shift/CreateMultiple
       // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
       // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
       [HttpPost]
@@ -125,6 +127,7 @@ namespace ScheduleApp.Controllers
          }
          ViewData["EmployeeId"] = new SelectList(_context.Employee, "Id", "Name", shift.EmployeeId);
          ViewData["ScheduleId"] = new SelectList(_context.Schedule, "Id", "Name", shift.ScheduleId);
+         ViewData["ShiftRoleId"] = new SelectList(_context.ShiftRole.Where(r => r.ScheduleId == shift.ScheduleId), "Id", "Name", shift.ShiftRoleId);
          return View(shift);
       }
 
@@ -133,7 +136,7 @@ namespace ScheduleApp.Controllers
       // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
       [HttpPost]
       [ValidateAntiForgeryToken]
-      public async Task<IActionResult> Edit(int id, [Bind("Id,Start,End,EmployeeId,ScheduleId")] Shift shift)
+      public async Task<IActionResult> Edit(int id, [Bind("Id,Start,End,EmployeeId,ScheduleId,ShiftRoleId")] Shift shift)
       {
          if (id != shift.Id)
          {
@@ -162,6 +165,7 @@ namespace ScheduleApp.Controllers
          }
          ViewData["EmployeeId"] = new SelectList(_context.Employee, "Id", "Name", shift.EmployeeId);
          ViewData["ScheduleId"] = new SelectList(_context.Schedule, "Id", "Name", shift.ScheduleId);
+         ViewData["ShiftRoleId"] = new SelectList(_context.ShiftRole.Where(r => r.ScheduleId == shift.ScheduleId), "Id", "Name", shift.ShiftRoleId);
          return View(shift);
       }
 
@@ -176,6 +180,7 @@ namespace ScheduleApp.Controllers
          var shift = await _context.Shift
              .Include(s => s.Employee)
              .Include(s => s.Schedule)
+             .Include(s => s.ShiftRole)
              .FirstOrDefaultAsync(m => m.Id == id);
          if (shift == null)
          {
@@ -194,6 +199,13 @@ namespace ScheduleApp.Controllers
          _context.Shift.Remove(shift);
          await _context.SaveChangesAsync();
          return RedirectToAction(nameof(Index));
+      }
+
+      [HttpGet]
+      public JsonResult GetScheduleShiftRoles(int ScheduleId)
+      {
+         var shiftRoleList = new SelectList(_context.ShiftRole.Where(r => r.ScheduleId == ScheduleId), "Id", "Name");
+         return Json(shiftRoleList);
       }
 
       private bool ShiftExists(int id)

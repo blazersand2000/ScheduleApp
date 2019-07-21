@@ -33,8 +33,10 @@ namespace ScheduleApp.Controllers
             return NotFound();
          }
 
-         var schedule = await _context.Schedule.Include(sched => sched.Shifts).ThenInclude(shift => shift.Employee)
-             .FirstOrDefaultAsync(m => m.Id == id);
+         var schedule = await _context.Schedule
+            .Include(sched => sched.Shifts).ThenInclude(shift => shift.Employee)
+            .Include(sched => sched.Shifts).ThenInclude(shift => shift.ShiftRole)
+            .FirstOrDefaultAsync(m => m.Id == id);
          if (schedule == null)
          {
             return NotFound();

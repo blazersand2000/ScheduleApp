@@ -21,12 +21,16 @@ namespace ScheduleApp.Models
       [Display(Name = "Employee")]
       public int EmployeeId { get; set; }
 
+      public Employee Employee { get; set; }
+
       [Display(Name = "Schedule")]
       public int ScheduleId { get; set; }
 
-      public Employee Employee { get; set; }
-
       public Schedule Schedule { get; set; }
 
+      [Display(Name = "Role")]
+      public int? ShiftRoleId { get; set; }
+
+      public ShiftRole ShiftRole { get; set; }
    }
 }

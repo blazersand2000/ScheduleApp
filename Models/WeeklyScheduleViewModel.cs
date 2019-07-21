@@ -32,7 +32,7 @@ namespace ScheduleApp.Models
             for (var date = selectedWeekStartDay; date < selectedWeekStartDay.AddDays(7); date = date.AddDays(1))
             {
                var empDayShifts = new List<Shift>();
-               empDayShifts.AddRange(employee.Shifts.Where(x => x.Start.Date == date.Date));
+               empDayShifts.AddRange(employee.Shifts.Where(x => x.Start.Date == date.Date && x.ScheduleId == schedule.Id));
                empShifts[date] = empDayShifts;
             }
             weeklySchedule.EmpWkShifts[employee] = empShifts;
