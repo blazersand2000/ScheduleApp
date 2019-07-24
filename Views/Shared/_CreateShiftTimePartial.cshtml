@@ -1,0 +1,68 @@
+﻿@model Shift
+
+<div>
+   <div class="modal fade" id="create-shift-time" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+         <div class="modal-content">
+            <div class="modal-header">
+               <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+               </button>
+            </div>
+            <div class="modal-body">
+               <form asp-action="Create">
+
+                  @Html.HiddenFor(s => s.ScheduleId)
+                  @Html.HiddenFor(s => s.EmployeeId)
+
+                  <dl class="row">
+                     <dt class="col-sm-2">
+                        @Html.DisplayNameFor(model => model.Employee)
+                     </dt>
+                     <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.Employee.Name)
+                     </dd>
+                     <dt class="col-sm-2">
+                        @Html.DisplayNameFor(model => model.Schedule)
+                     </dt>
+                     <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.Schedule.Name)
+                     </dd>
+                     <dt class="col-sm-2">
+                        Date
+                     </dt>
+                     <dd class="col-sm-10">
+                        @Model.Start.Date.ToLongDateString()
+                     </dd>
+                  </dl>
+
+
+
+                  <div class="form-group">
+                     <label class="control-label">Time</label>
+                     @await Html.PartialAsync("_TimeRangePartial")
+                  </div>
+
+                  <div class="form-group">
+                     <label asp-for="ShiftRole" class="control-label"></label>
+                     <select asp-for="ShiftRoleId" class="form-control shiftRoleList" asp-items="ViewBag.ShiftRoleId">
+                        <option value="">None</option>
+                     </select>
+                     <span asp-validation-for="ShiftRoleId" class="text-danger"></span>
+                  </div>
+
+                  <div class="form-group">
+                     <input type="submit" value="Create Shift" class="btn btn-primary" disabled/>
+                  </div>
+
+               </form>
+            </div>
+            @*<div class="modal-footer">
+               <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+               <button type="button" class="btn btn-primary">Save changes</button>
+            </div>*@
+         </div>
+      </div>
+   </div>
+</div>

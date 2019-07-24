@@ -91,6 +91,32 @@ namespace ScheduleApp.Controllers
          });
       }
 
+      public async Task<IActionResult> CreateModal(int scheduleId, int employeeId, DateTime date)
+      {
+         var schedule = await _context.Schedule.FirstOrDefaultAsync(s => s.Id == scheduleId);
+         var employee = await _context.Employee.FirstOrDefaultAsync(e => e.Id == employeeId);
+         var dateComponent = date.Date;
+
+
+         if (schedule == null || employee == null)
+         {
+            return NotFound();
+         }
+
+         Shift shift = new Shift()
+         {
+            ScheduleId = scheduleId,
+            Schedule = schedule,
+            EmployeeId = employeeId,
+            Employee = employee,
+            Start = dateComponent
+         };
+
+         ViewData["ShiftRoleId"] = new SelectList(_context.ShiftRole.Where(r => r.ScheduleId == shift.ScheduleId), "Id", "Name", shift.ShiftRoleId);
+
+         return PartialView("_CreateShiftTimePartial", shift);
+      }
+
       // POST: Shift/CreateMultiple
       // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
       // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
