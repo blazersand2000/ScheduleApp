@@ -19,66 +19,66 @@
 <div>
    @if (Model.EmpWkShifts != null && Model.EmpWkShifts.Count > 0)
    {
-      <form asp-controller="Schedule" asp-action="Details" method="get" class="form-inline">
-         <p>
-            Work Week:
-            <select asp-for="SelectedWeekStartDay" asp-items="Model.Weeks" class="custom-select" onchange="$(this).closest('form').submit()"></select>
-            @*<input type="submit" value="Choose" class="btn btn-primary" />*@
-         </p>
-      </form>
+   <form asp-controller="Schedule" asp-action="Details" method="get" class="form-inline">
+      <p>
+         Work Week:
+         <select asp-for="SelectedWeekStartDay" asp-items="Model.Weeks" class="custom-select" onchange="$(this).closest('form').submit()"></select>
+         @*<input type="submit" value="Choose" class="btn btn-primary" />*@
+      </p>
+   </form>
 
-      <table class="table table-bordered table-responsive schedule">
-         <thead>
-            <tr>
-               <th class="schedule-name">Employee</th>
-               <th class="schedule-day">@Model.SelectedWeekStartDay.ToString("ddd d")</th>
-               <th class="schedule-day">@Model.SelectedWeekStartDay.AddDays(1).ToString("ddd d")</th>
-               <th class="schedule-day">@Model.SelectedWeekStartDay.AddDays(2).ToString("ddd d")</th>
-               <th class="schedule-day">@Model.SelectedWeekStartDay.AddDays(3).ToString("ddd d")</th>
-               <th class="schedule-day">@Model.SelectedWeekStartDay.AddDays(4).ToString("ddd d")</th>
-               <th class="schedule-day">@Model.SelectedWeekStartDay.AddDays(5).ToString("ddd d")</th>
-               <th class="schedule-day">@Model.SelectedWeekStartDay.AddDays(6).ToString("ddd d")</th>
-            </tr>
-         </thead>
-         <tbody>
-            @foreach (var employee in Model.EmpWkShifts.OrderBy(x => x.Key.First))
+   <table class="table table-bordered table-responsive schedule">
+      <thead>
+         <tr>
+            <th class="schedule-name">Employee</th>
+            <th class="schedule-day">@Model.SelectedWeekStartDay.ToString("ddd d")</th>
+            <th class="schedule-day">@Model.SelectedWeekStartDay.AddDays(1).ToString("ddd d")</th>
+            <th class="schedule-day">@Model.SelectedWeekStartDay.AddDays(2).ToString("ddd d")</th>
+            <th class="schedule-day">@Model.SelectedWeekStartDay.AddDays(3).ToString("ddd d")</th>
+            <th class="schedule-day">@Model.SelectedWeekStartDay.AddDays(4).ToString("ddd d")</th>
+            <th class="schedule-day">@Model.SelectedWeekStartDay.AddDays(5).ToString("ddd d")</th>
+            <th class="schedule-day">@Model.SelectedWeekStartDay.AddDays(6).ToString("ddd d")</th>
+         </tr>
+      </thead>
+      <tbody>
+         @foreach (var employee in Model.EmpWkShifts.OrderBy(x => x.Key.First))
             {
-               <tr>
-                  <td>
-                     <a asp-controller="Employee" asp-action="Details" asp-route-id="@employee.Key.Id" class="text-dark">
-                        @employee.Key.Name
-                     </a>
-                  </td>
-                  @foreach (var date in Model.EmpWkShifts.First().Value.Keys)
+         <tr>
+            <td>
+               <a asp-controller="Employee" asp-action="Details" asp-route-id="@employee.Key.Id" class="text-dark">
+                  @employee.Key.Name
+               </a>
+            </td>
+            @foreach (var date in Model.EmpWkShifts.First().Value.Keys)
                   {
-                     <td class="emp-day-cell">
-                        <ul class="list-unstyled">
-                           @foreach (var shift in Model.EmpWkShifts[employee.Key][date])
+            <td class="emp-day-cell">
+               <ul class="list-unstyled">
+                  @foreach (var shift in Model.EmpWkShifts[employee.Key][date])
                            {
-                              <li>
-                                 <h6 class="font-weight-light">
-                                    @String.Format("{0:t} - {1:t}", shift.Start, shift.End)
-                                 </h6>
-                                 @if (shift.ShiftRoleId != null)
+                  <li>
+                     <h6 class="font-weight-light">
+                        @String.Format("{0:t} - {1:t}", shift.Start, shift.End)
+                     </h6>
+                     @if (shift.ShiftRoleId != null)
                                  {
-                                    <span class="badge badge-secondary">@shift.ShiftRole.Name</span>
+                     <span class="badge badge-secondary">@shift.ShiftRole.Name</span>
                                  }
-                              </li>
+                  </li>
                            }
-                        </ul>
-                        <button class="add-shift-time-button" data-scheduleId="@Model.ScheduleId" data-employeeId="@employee.Key.Id" data-date="@date" style="display: none">
-                           Add Shift
-                        </button>
-                     </td>
+               </ul>
+               <button class="add-shift-time-button" data-scheduleId="@Model.ScheduleId" data-employeeId="@employee.Key.Id" data-date="@date" style="display: none">
+                  Add Shift
+               </button>
+            </td>
                   }
-               </tr>
+         </tr>
             }
-         </tbody>
-      </table>
+      </tbody>
+   </table>
    }
    else
    {
-      <p>No shifts scheduled</p>
+   <p>No shifts scheduled</p>
    }
 
 </div>
@@ -86,8 +86,8 @@
 <div>
    <!-- Button trigger modal -->
    @*<button type="button" class="btn btn-primary" data-toggle="ajax-modal" data-target="#create-shift-time" data-url="@Url.Action("CreateModal", "Shift")">
-      Launch demo modal
-   </button>*@
+         Launch demo modal
+      </button>*@
 
    <!-- Modal -->
    <div id="modal-placeholder"></div>
@@ -112,6 +112,7 @@
             });
          });
 
+         //TODO: Clean this up
          $(".emp-day-cell").hover(
             function () {
                $(this).find(".add-shift-time-button").show();
@@ -123,6 +124,31 @@
             }
          );
 
+         placeholderElement.on("click", "[data-save='modal']", function (event) {
+            event.preventDefault();
+
+            var form = $(this).parents(".modal").find("form");
+            var actionUrl = form.attr("action");
+
+            var startTime = new Date(("1970-12-05 " + $(".slider-time")[0].innerHTML));
+            var endTime = new Date(("1970-12-05 " + $(".slider-time2")[0].innerHTML));
+            var date = new Date($("#Start").val());
+            startTime.setYear(date.getFullYear());
+            startTime.setMonth(date.getMonth());
+            startTime.setDate(date.getDate());
+            endTime.setYear(date.getFullYear());
+            endTime.setMonth(date.getMonth());
+            endTime.setDate(date.getDate());
+            $("#Start").val(startTime.toISOString());
+            $("#End").val(endTime.toISOString());
+
+            var dataToSend = form.serialize();
+
+            $.post(actionUrl, dataToSend).done(function (data) {
+               //placeholderElement.find('.modal').modal('hide');
+               location.reload(true);
+            });
+         });
       });
    </script>
 }
