@@ -11,8 +11,9 @@
                </button>
             </div>
             <div class="modal-body">
-               <form asp-controller="Shift" asp-action="CreateModal">
+               <form asp-action="CreateModal" class="create-edit-form">
 
+                  @Html.HiddenFor(s => s.Id)
                   @Html.HiddenFor(s => s.Start)
                   @Html.HiddenFor(s => s.End)
                   @Html.HiddenFor(s => s.ScheduleId)
@@ -43,7 +44,7 @@
 
                   <div class="form-group">
                      <label class="control-label">Time</label>
-                     @await Html.PartialAsync("_TimeRangePartial")
+                     @await Html.PartialAsync("_TimeRangePartial", @Model)
                   </div>
 
                   <div class="form-group">
@@ -55,7 +56,7 @@
                   </div>
 
                   <div class="form-group">
-                     <input type="submit" value="Create Shift" class="btn btn-primary" data-save="modal" />
+                     <input type="submit" value="Save Shift" class="btn btn-primary" data-save="modal" />
                   </div>
 
                </form>

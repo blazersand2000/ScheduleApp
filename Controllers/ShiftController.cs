@@ -175,6 +175,25 @@ namespace ScheduleApp.Controllers
          return View(shift);
       }
 
+      // GET: Shift/EditModal/5
+      public async Task<IActionResult> EditModal(int? id)
+      {
+         if (id == null)
+         {
+            return NotFound();
+         }
+
+         var shift = await _context.Shift.Include(s => s.Schedule).Include(e => e.Employee).FirstOrDefaultAsync(x => x.Id == id);
+
+         if (shift == null)
+         {
+            return NotFound();
+         }
+
+         ViewData["ShiftRoleId"] = new SelectList(_context.ShiftRole.Where(r => r.ScheduleId == shift.ScheduleId), "Id", "Name", shift.ShiftRoleId);
+         return PartialView("_CreateShiftTimePartial", shift);
+      }
+
       // POST: Shift/Edit/5
       // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
       // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
@@ -213,6 +232,51 @@ namespace ScheduleApp.Controllers
          return View(shift);
       }
 
+      // POST: Shift/EditModal/5
+      // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+      // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+      [HttpPost]
+      [ValidateAntiForgeryToken]
+      public async Task<IActionResult> EditModal(int? id, [Bind("Id,Start,End,EmployeeId,ScheduleId,ShiftRoleId")] Shift shift)
+      {
+         if (id != shift.Id)
+         {
+            return NotFound();
+         }
+
+         if (ModelState.IsValid)
+         {
+            try
+            {
+               _context.Update(shift);
+               await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+               if (!ShiftExists(shift.Id))
+               {
+                  return NotFound();
+               }
+               else
+               {
+                  throw;
+               }
+            }
+            return Content("Success!");
+         }
+
+         //ModelState was not valid, so return the edit form
+         var retShift = await _context.Shift.Include(s => s.Schedule).Include(e => e.Employee).FirstOrDefaultAsync(x => x.Id == id);
+
+         if (retShift == null)
+         {
+            return NotFound();
+         }
+
+         ViewData["ShiftRoleId"] = new SelectList(_context.ShiftRole.Where(r => r.ScheduleId == retShift.ScheduleId), "Id", "Name", retShift.ShiftRoleId);
+         return PartialView("_CreateShiftTimePartial", shift);
+      }
+
       // GET: Shift/Delete/5
       public async Task<IActionResult> Delete(int? id)
       {
@@ -234,6 +298,27 @@ namespace ScheduleApp.Controllers
          return View(shift);
       }
 
+      // GET: Shift/DeleteModal/5
+      public async Task<IActionResult> DeleteModal(int? id)
+      {
+         if (id == null)
+         {
+            return NotFound();
+         }
+
+         var shift = await _context.Shift
+             .Include(s => s.Employee)
+             .Include(s => s.Schedule)
+             .Include(s => s.ShiftRole)
+             .FirstOrDefaultAsync(m => m.Id == id);
+         if (shift == null)
+         {
+            return NotFound();
+         }
+
+         return PartialView("_DeleteShiftTimePartial", shift);
+      }
+
       // POST: Shift/Delete/5
       [HttpPost, ActionName("Delete")]
       [ValidateAntiForgeryToken]
@@ -243,6 +328,17 @@ namespace ScheduleApp.Controllers
          _context.Shift.Remove(shift);
          await _context.SaveChangesAsync();
          return RedirectToAction(nameof(Index));
+      }
+
+      // POST: Shift/DeleteModal/5
+      [HttpPost, ActionName("DeleteModal")]
+      [ValidateAntiForgeryToken]
+      public async Task<IActionResult> DeleteModalConfirmed(int id)
+      {
+         var shift = await _context.Shift.FindAsync(id);
+         _context.Shift.Remove(shift);
+         await _context.SaveChangesAsync();
+         return Content("Success!");
       }
 
       [HttpGet]

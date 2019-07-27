@@ -19,66 +19,87 @@
 <div>
    @if (Model.EmpWkShifts != null && Model.EmpWkShifts.Count > 0)
    {
-   <form asp-controller="Schedule" asp-action="Details" method="get" class="form-inline">
-      <p>
-         Work Week:
-         <select asp-for="SelectedWeekStartDay" asp-items="Model.Weeks" class="custom-select" onchange="$(this).closest('form').submit()"></select>
-         @*<input type="submit" value="Choose" class="btn btn-primary" />*@
-      </p>
-   </form>
+      <form asp-controller="Schedule" asp-action="Details" method="get" class="form-inline">
+         <p>
+            Work Week:
+            <select asp-for="SelectedWeekStartDay" asp-items="Model.Weeks" class="custom-select" onchange="$(this).closest('form').submit()"></select>
+            @*<input type="submit" value="Choose" class="btn btn-primary" />*@
+         </p>
+      </form>
 
-   <table class="table table-bordered table-responsive schedule">
-      <thead>
-         <tr>
-            <th class="schedule-name">Employee</th>
-            <th class="schedule-day">@Model.SelectedWeekStartDay.ToString("ddd d")</th>
-            <th class="schedule-day">@Model.SelectedWeekStartDay.AddDays(1).ToString("ddd d")</th>
-            <th class="schedule-day">@Model.SelectedWeekStartDay.AddDays(2).ToString("ddd d")</th>
-            <th class="schedule-day">@Model.SelectedWeekStartDay.AddDays(3).ToString("ddd d")</th>
-            <th class="schedule-day">@Model.SelectedWeekStartDay.AddDays(4).ToString("ddd d")</th>
-            <th class="schedule-day">@Model.SelectedWeekStartDay.AddDays(5).ToString("ddd d")</th>
-            <th class="schedule-day">@Model.SelectedWeekStartDay.AddDays(6).ToString("ddd d")</th>
-         </tr>
-      </thead>
-      <tbody>
-         @foreach (var employee in Model.EmpWkShifts.OrderBy(x => x.Key.First))
+      <table class="table table-bordered table-responsive schedule">
+         <thead>
+            <tr>
+               <th class="schedule-name">Employee</th>
+               <th class="schedule-day">@Model.SelectedWeekStartDay.ToString("ddd d")</th>
+               <th class="schedule-day">@Model.SelectedWeekStartDay.AddDays(1).ToString("ddd d")</th>
+               <th class="schedule-day">@Model.SelectedWeekStartDay.AddDays(2).ToString("ddd d")</th>
+               <th class="schedule-day">@Model.SelectedWeekStartDay.AddDays(3).ToString("ddd d")</th>
+               <th class="schedule-day">@Model.SelectedWeekStartDay.AddDays(4).ToString("ddd d")</th>
+               <th class="schedule-day">@Model.SelectedWeekStartDay.AddDays(5).ToString("ddd d")</th>
+               <th class="schedule-day">@Model.SelectedWeekStartDay.AddDays(6).ToString("ddd d")</th>
+            </tr>
+         </thead>
+         <tbody>
+            @foreach (var employee in Model.EmpWkShifts.OrderBy(x => x.Key.First))
             {
-         <tr>
-            <td>
-               <a asp-controller="Employee" asp-action="Details" asp-route-id="@employee.Key.Id" class="text-dark">
-                  @employee.Key.Name
-               </a>
-            </td>
-            @foreach (var date in Model.EmpWkShifts.First().Value.Keys)
+               <tr>
+                  <td>
+                     <a asp-controller="Employee" asp-action="Details" asp-route-id="@employee.Key.Id" class="text-dark">
+                        @employee.Key.Name
+                     </a>
+                  </td>
+                  @foreach (var date in Model.EmpWkShifts.First().Value.Keys)
                   {
-            <td class="emp-day-cell">
-               <ul class="list-unstyled">
-                  @foreach (var shift in Model.EmpWkShifts[employee.Key][date])
+                     <td class="emp-day-cell">
+                        <ul class="list-unstyled">
+                           @foreach (var shift in Model.EmpWkShifts[employee.Key][date])
                            {
-                  <li>
-                     <h6 class="font-weight-light">
-                        @String.Format("{0:t} - {1:t}", shift.Start, shift.End)
-                     </h6>
-                     @if (shift.ShiftRoleId != null)
+                              <li>
+                                 <h6 class="font-weight-light">
+                                    @String.Format("{0:t} - {1:t}", shift.Start, shift.End)
+                                 </h6>
+                                 @if (shift.ShiftRoleId != null)
                                  {
-                     <span class="badge badge-secondary">@shift.ShiftRole.Name</span>
+                                    <span class="badge badge-secondary">@shift.ShiftRole.Name</span>
                                  }
-                  </li>
+                                 <a href="#">
+                                    <img src="~/images/edit-outline-sm.png"
+                                          class="edit-shift-time-button hover-vis"
+                                          data-shiftId="@shift.Id"
+                                          data-url="@Url.Action("EditModal", "Shift")"
+                                          style="display: none" />
+                                 </a>
+                                 <a href="#">
+                                    <img src="~/images/delete-outline-sm.png"
+                                          class="delete-shift-time-button hover-vis"
+                                          data-shiftId="@shift.Id"
+                                          data-url="@Url.Action("DeleteModal", "Shift")"
+                                          style="display: none" />
+                                 </a>
+                              </li>
                            }
-               </ul>
-               <button class="add-shift-time-button" data-scheduleId="@Model.ScheduleId" data-employeeId="@employee.Key.Id" data-date="@date" style="display: none">
-                  Add Shift
-               </button>
-            </td>
+                        </ul>
+                        <a href="#">
+                           <img src="~/images/add-outline-sm.png"
+                                class="add-shift-time-button hover-vis"
+                                data-scheduleId="@Model.ScheduleId"
+                                data-employeeId="@employee.Key.Id"
+                                data-date="@date"
+                                data-url="@Url.Action("CreateModal", "Shift")"
+                                style="display: none" />
+                        </a>
+
+                     </td>
                   }
-         </tr>
+               </tr>
             }
-      </tbody>
-   </table>
+         </tbody>
+      </table>
    }
    else
    {
-   <p>No shifts scheduled</p>
+      <p>No shifts scheduled</p>
    }
 
 </div>
@@ -98,29 +119,58 @@
    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 
    <script type="text/javascript">
-      $(document).ready(function() {
+      $(document).ready(function () {
          var placeholderElement = $("#modal-placeholder");
+
          $(".add-shift-time-button").click(function () {
-            $.get("@Url.Action("CreateModal", "Shift")",
+            $.get($(this).data("url"),
                {
                   scheduleId: $(this).data("scheduleid"),
                   employeeId: $(this).data("employeeid"),
                   date: $(this).data("date")
                }).done(function (data) {
-               placeholderElement.html(data);
-               placeholderElement.find(".modal").modal("show");
-            });
+                  placeholderElement.html(data);
+                  placeholderElement.find(".create-edit-form").attr("action", "@Url.Action("CreateModal", "Shift")")
+                  placeholderElement.find(".modal").modal("show");
+               });
          });
 
-         //TODO: Clean this up
+         $(".edit-shift-time-button").click(function () {
+            $.get($(this).data("url"),
+               {
+                  Id: $(this).data("shiftid")
+               }).done(function (data) {
+                  placeholderElement.html(data);
+                  placeholderElement.find(".create-edit-form").attr("action", "@Url.Action("EditModal", "Shift")")
+                  placeholderElement.find(".modal").modal("show");
+               });
+         });
+
+         $(".delete-shift-time-button").click(function () {
+            $.get($(this).data("url"),
+               {
+                  Id: $(this).data("shiftid")
+               }).done(function (data) {
+                  placeholderElement.html(data);
+                  placeholderElement.find(".modal").modal("show");
+               });
+         });
+
          $(".emp-day-cell").hover(
             function () {
-               $(this).find(".add-shift-time-button").show();
-               var btn = $(".add-shift-time-button", this)
-               btn.show();
+               $(this).find(".hover-vis").show();
             },
             function () {
-               $(this).children(".add-shift-time-button").hide();
+               $(this).find(".hover-vis").hide();
+            }
+         );
+
+         $(".hover-vis").hover(
+            function () {
+               $(this).attr("src", $(this).attr("src").replace("outline", "fill"));
+            },
+            function () {
+               $(this).attr("src", $(this).attr("src").replace("fill", "outline"));
             }
          );
 
@@ -145,10 +195,22 @@
             var dataToSend = form.serialize();
 
             $.post(actionUrl, dataToSend).done(function (data) {
-               //placeholderElement.find('.modal').modal('hide');
                location.reload(true);
             });
          });
+
+         placeholderElement.on("click", "[data-delete='modal']", function (event) {
+            event.preventDefault();
+
+            var form = $(this).parents(".modal").find("form");
+            var actionUrl = form.attr("action");
+            var dataToSend = form.serialize();
+
+            $.post(actionUrl, dataToSend).done(function (data) {
+               location.reload(true);
+            });
+         });
+
       });
    </script>
 }
