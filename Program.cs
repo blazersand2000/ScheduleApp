@@ -23,7 +23,7 @@ namespace ScheduleApp
             {
                var context = services.GetRequiredService<ScheduleAppContext>();
                context.Database.Migrate();
-               SeedData.Initialize(services);
+               //SeedData.Initialize(services);
             }
             catch (Exception ex)
             {

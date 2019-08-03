@@ -1,9 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
+using System;
 
 namespace ScheduleApp.Models
 {
-   public class ScheduleAppContext : DbContext
-    {
+   public class ScheduleAppContext : IdentityDbContext<AppUser, IdentityRole, string>
+   {
         public ScheduleAppContext (DbContextOptions<ScheduleAppContext> options)
             : base(options)
         {

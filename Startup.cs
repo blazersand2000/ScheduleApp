@@ -1,16 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using ScheduleApp.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace ScheduleApp
 {
@@ -38,6 +35,19 @@ namespace ScheduleApp
 
           services.AddDbContext<ScheduleAppContext>(options =>
                   options.UseSqlServer(Configuration.GetConnectionString("ScheduleAppContext")));
+
+         services.AddIdentity<AppUser, IdentityRole>()
+             .AddEntityFrameworkStores<ScheduleAppContext>()
+             .AddDefaultTokenProviders();
+
+         services.ConfigureApplicationCookie(options =>
+         {
+            options.LoginPath = "/login";
+            options.LogoutPath = "/logout";
+            options.AccessDeniedPath = "/accessdenied";
+         });
+
+         services.AddTransient<SeedData>();
       }
 
       // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -57,13 +67,15 @@ namespace ScheduleApp
          app.UseHttpsRedirection();
          app.UseStaticFiles();
          app.UseCookiePolicy();
-
+         app.UseAuthentication();
          app.UseMvc(routes =>
          {
             routes.MapRoute(
                    name: "default",
                    template: "{controller=Home}/{action=Index}/{id?}");
          });
+
+         SeedData.Run(app.ApplicationServices).Wait();
       }
    }
 }
