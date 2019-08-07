@@ -56,5 +56,35 @@ namespace ScheduleApp.Controllers
 
          return View();
       }
+
+      [HttpGet]
+      [Route("/register")]
+      public async Task<IActionResult> Register()
+      {
+         return View();
+      }
+      
+      [HttpPost]
+      [ValidateAntiForgeryToken]
+      [Route("/register")]
+      public async Task<IActionResult> Register(RegisterViewModel model)
+      {
+         if (ModelState.IsValid)
+         {
+            var user = new AppUser { UserName = model.Email, Email = model.Email };
+            var result = await _userManager.CreateAsync(user, model.Password);
+            if (result.Succeeded)
+            {
+               await _userManager.AddToRoleAsync(user, "freeAccount");
+               return RedirectToAction("Index", "Schedule");
+            }
+            else
+            {
+               throw new Exception("Invalid registration");
+            }
+         }
+         return View(model);
+      }
    }
+
 }
